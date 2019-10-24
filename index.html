@@ -38,37 +38,29 @@
 				<p id="gameReport">Waiting on remote player...</p>
 			</div>
 
-			<div>
+			<div class="ui segment">
 				<i class="massive hand paper outline icon" data-choice="paper"></i>
 				<i class="massive hand rock outline icon" data-choice="rock"></i>
-				<i
-					class="massive hand scissors outline icon"
-					data-choice="scissors"
-				></i>
+				<i class="massive hand scissors outline icon" data-choice="scissors"></i>
 			</div>
 
 			<div class="ui input focus">
-				<input type="text" placeholder="Say hello" />
-				<div class="ui violet icon button">
+				<input type="text" placeholder="Say hello" id="userMessage" />
+				<div id="chatSendButton" class="ui violet icon button">
 					Send
 				</div>
 			</div>
-			<div class="ui floating message">
-				<p>
-					<span>Veronica:</span>
-					Way to go!
-				</p>
-			</div>
+			<div id="chatMessages" class="ui floating message"></div>
 		</div>
 
 		<div class="ui padded segment tiny modal">
 			<div class="ui form">
-					<div class="field">
-						<label>Enter Your Name</label>
-						<input placeholder="Name" type="text" id="userName"/>
-					</div>
+				<div class="field">
+					<label>Enter Your Name</label>
+					<input placeholder="Name" type="text" id="userName" />
+				</div>
 				<div class="ui submit button">Submit</div>
-            </div>
+			</div>
 		</div>
 
 		<script>

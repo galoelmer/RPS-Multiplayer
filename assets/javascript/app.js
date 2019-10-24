@@ -180,16 +180,46 @@ $(function () {
     // Modal shows input-name form before game starts
     $('.tiny.modal').modal('show');
 
-    $(".ui.submit.button").click(function(){
 
+    var userName = "Anonymous";
+
+    $(".ui.submit.button").click(function () {
+
+        userName = $("#userName").val();
         // Update player's name in the database
         myUserRef.update({
 
-            name: $("#userName").val()
+            name: userName || "Anonymous"
 
         });
 
         $('.tiny.modal').modal('hide');
+
+    });
+
+
+
+    var chatRef = database.ref("/chats");
+
+    chatRef.on("child_added", function (snapshot) {
+
+        var p = $("<p>").text(snapshot.val().name + ": " + snapshot.val().message);
+
+        $("#chatMessages").prepend(p);
+
+    });
+
+
+    $("#chatSendButton").on("click", function () {
+
+        var message = $("#userMessage").val();
+
+        chatRef.push({
+            message: message,
+            name: userName
+        });
+
+        $("#userMessage").val("");
 
     });
 
