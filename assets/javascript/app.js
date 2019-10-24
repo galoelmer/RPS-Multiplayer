@@ -40,7 +40,7 @@ $(function () {
 
     // Set a maximum number of players to two. Other user are able to connect, but
     // they are no able to play. Only the first two user connections are allow to play.
-    onlineUsersRef.limitToFirst(2).once("value", function (snapshot) {
+    onlineUsersRef.limitToFirst(2).on("value", function (snapshot) {
 
         // Loop through connected-users-list and compares each other IDs to
         // identified the second connection user
@@ -74,6 +74,28 @@ $(function () {
             choice: $(this).attr("data-choice")
 
         });
+
+    });
+
+    // Event listens to any changes in onlineUsersList
+    onlineUsersRef.on("value", function (snapshot) {
+
+        // Store my user player choice (rock, paper, scissor)
+        var myChoice = snapshot.child(myUserId).val().choice;
+
+        // Check if remote user id exist and checks if both players have made their choice, if all true then a function to check who wins is call
+        if (remoteUserId && myChoice) {
+
+            // Store remote player choice (rock, paper, scissor)
+            var remoteUserChoice = snapshot.child(remoteUserId).val().choice;
+
+            if (remoteUserChoice) {
+
+                console.log("call function to check who wins");
+
+            }
+
+        }
 
     });
 
