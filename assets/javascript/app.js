@@ -50,7 +50,7 @@ $(function () {
             // the second player is log
             if (user.key != myUserId) {
 
-                console.log("Other player connected!");
+                //console.log("Other player connected!");
 
                 //Gets second player Id from database
                 remoteUserId = user.key;
@@ -87,16 +87,43 @@ $(function () {
         if (remoteUserId && myChoice) {
 
             // Store remote player choice (rock, paper, scissor)
-            var remoteUserChoice = snapshot.child(remoteUserId).val().choice;
+            var remotePlayerChoice = snapshot.child(remoteUserId).val().choice;
 
-            if (remoteUserChoice) {
+            if (remotePlayerChoice) {
 
-                console.log("call function to check who wins");
+                checkWinner(myChoice, remotePlayerChoice);
+
+                // Clear players choice in the database
+                myUserRef.update({
+                    choice: ""
+                });
+
+                remoteUserRef.update({
+                    choice: ""
+                });
 
             }
 
         }
 
     });
+
+    function checkWinner(myChoice, remotePlayerChoice) {
+
+        if (myChoice == remotePlayerChoice) {
+            console.log("It's a TIE");
+        }
+        else if (myChoice == "rock" && remotePlayerChoice == "scissors") {
+            console.log("You Win ROCK");
+        }
+        else if (myChoice == "paper" && remotePlayerChoice == "rock") {
+            console.log("You win PAPER");
+        }
+        else if (myChoice == "scissors" && remotePlayerChoice == "paper") {
+            console.log("You Win SCISSORS");
+        } else {
+            console.log("You Lose");
+        }
+    }
 
 });
