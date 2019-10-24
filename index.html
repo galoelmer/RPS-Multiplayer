@@ -11,8 +11,8 @@
 			rel="stylesheet"
 			href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"
 		/>
-        <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-database.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-database.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-analytics.js"></script>
 		<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 		<script src="./assets/javascript/app.js"></script>
@@ -21,20 +21,17 @@
 		<div class="ui center aligned container">
 			<h1 class="ui header">Rock-Paper-Scissors Multiplayer</h1>
 
-			<a class="ui blue image label">
-				<span>Veronica</span>
-				<div class="detail">
-					<span>Win: 23</span>
-					<span>Lose: 15</span>
-				</div>
-			</a>
-			<a class="ui teal image label">
-				<span>Anonymous</span>
-				<div class="detail">
-					<span>Win: 15</span>
-					<span>Lose: 23</span>
-				</div>
-			</a>
+			<div>
+                <h3>Score</h3>
+				<a class="ui blue label">
+					<span id="myUserName">Anonymous</span>
+					<div id="myScore" class="detail">0</div>
+				</a>
+				<a class="ui teal label">
+					<span id="remoteUserName">Anonymous</span>
+					<div id="remoteUserScore" class="detail">0</div>
+				</a>
+			</div>
 
 			<div class="ui segment">
 				<p>Waiting on remote player...</p>
@@ -43,7 +40,10 @@
 			<div>
 				<i class="massive hand paper outline icon" data-choice="paper"></i>
 				<i class="massive hand rock outline icon" data-choice="rock"></i>
-				<i class="massive hand scissors outline icon" data-choice="scissors"></i>
+				<i
+					class="massive hand scissors outline icon"
+					data-choice="scissors"
+				></i>
 			</div>
 
 			<div class="ui input focus">
@@ -61,7 +61,6 @@
 		</div>
 
 		<script>
-
 			var config = {
 				apiKey: "AIzaSyDs9pxAozVMYisloEJwbxc6Jr4qI4vEC4g",
 				authDomain: "rps-multiplayer-6e301.firebaseapp.com",
@@ -74,8 +73,7 @@
 			};
 
 			firebase.initializeApp(config);
-            var database = firebase.database();
-
+			var database = firebase.database();
 		</script>
 	</body>
 </html>

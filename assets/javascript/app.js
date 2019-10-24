@@ -9,6 +9,7 @@ $(function () {
     var remoteUserRef;
 
     // Get database reference to all connected users
+    // All connections will be stored in this directory
     var onlineUsersRef = database.ref("/onlineUsersList");
 
     // '.info/connected' is a boolean value, true if users are connected and false if they are not.
@@ -93,37 +94,65 @@ $(function () {
 
                 checkWinner(myChoice, remotePlayerChoice);
 
-                // Clear players choice in the database
-                myUserRef.update({
-                    choice: ""
-                });
-
-                remoteUserRef.update({
-                    choice: ""
-                });
-
             }
 
         }
 
     });
 
+    onlineUsersRef.on("value", function(snapshot){
+
+        if (remoteUserId) {
+
+            $("#myScore").text(snapshot.child(myUserId).val().score);
+
+            $("#remoteUserScore").text(snapshot.child(remoteUserId).val().score);
+
+        }
+
+    });
+
+    var score = 0;
+
+    // Functions compares players choice between rock, paper, scissors and
+    // choose the the winner hand
     function checkWinner(myChoice, remotePlayerChoice) {
 
         if (myChoice == remotePlayerChoice) {
             console.log("It's a TIE");
+            scoreDatabaseUpdate();
         }
         else if (myChoice == "rock" && remotePlayerChoice == "scissors") {
             console.log("You Win ROCK");
+            score++;
+            scoreDatabaseUpdate();
         }
         else if (myChoice == "paper" && remotePlayerChoice == "rock") {
             console.log("You win PAPER");
+            score++;
+            scoreDatabaseUpdate();
         }
         else if (myChoice == "scissors" && remotePlayerChoice == "paper") {
             console.log("You Win SCISSORS");
+            score++;
+            scoreDatabaseUpdate();
         } else {
             console.log("You Lose");
+            scoreDatabaseUpdate();
         }
+    }
+
+    function scoreDatabaseUpdate() {
+
+        myUserRef.update({
+            score: score,
+            choice: ""
+        });
+
+        remoteUserRef.update({
+            choice: ""
+        });
+
     }
 
 });
