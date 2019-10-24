@@ -11,6 +11,9 @@
 			rel="stylesheet"
 			href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"
 		/>
+        <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-database.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-analytics.js"></script>
 		<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 		<script src="./assets/javascript/app.js"></script>
 	</head>
@@ -50,8 +53,29 @@
 				</div>
 			</div>
 			<div class="ui floating message">
-				<p><span>Veronica: </span> Way to go!</p>
+				<p>
+					<span>Veronica:</span>
+					Way to go!
+				</p>
 			</div>
 		</div>
+
+		<script>
+
+			var config = {
+				apiKey: "AIzaSyDs9pxAozVMYisloEJwbxc6Jr4qI4vEC4g",
+				authDomain: "rps-multiplayer-6e301.firebaseapp.com",
+				databaseURL: "https://rps-multiplayer-6e301.firebaseio.com",
+				projectId: "rps-multiplayer-6e301",
+				storageBucket: "rps-multiplayer-6e301.appspot.com",
+				messagingSenderId: "541820276444",
+				appId: "1:541820276444:web:0b9e63e280e0afb2482e19",
+				measurementId: "G-G7Z434P29F"
+			};
+
+			firebase.initializeApp(config);
+            var database = firebase.database();
+
+		</script>
 	</body>
 </html>
