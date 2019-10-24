@@ -100,7 +100,9 @@ $(function () {
 
     });
 
-    onlineUsersRef.on("value", function(snapshot){
+
+    // Update UI scores and players' name
+    onlineUsersRef.on("value", function (snapshot) {
 
         if (remoteUserId) {
 
@@ -108,7 +110,13 @@ $(function () {
 
             $("#remoteUserScore").text(snapshot.child(remoteUserId).val().score);
 
+            $("#remoteUserName").text(snapshot.child(remoteUserId).val().name);
+
+            $("#gameReport").text(snapshot.child(remoteUserId).val().name + " is online");
+
         }
+
+        $("#myUserName").text(snapshot.child(myUserId).val().name);
 
     });
 
@@ -142,6 +150,7 @@ $(function () {
         }
     }
 
+    // Function resets data from users
     function scoreDatabaseUpdate() {
 
         myUserRef.update({
@@ -154,5 +163,34 @@ $(function () {
         });
 
     }
+
+    // After remote player disconnects, reset remote user id and clear
+    // my user database data
+    onlineUsersRef.on("child_removed", function () {
+
+        remoteUserId = "";
+
+        myUserRef.update({
+            score: 0
+        });
+
+    });
+
+
+    // Modal shows input-name form before game starts
+    $('.tiny.modal').modal('show');
+
+    $(".ui.submit.button").click(function(){
+
+        // Update player's name in the database
+        myUserRef.update({
+
+            name: $("#userName").val()
+
+        });
+
+        $('.tiny.modal').modal('hide');
+
+    });
 
 });

@@ -15,6 +15,7 @@
 		<script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-database.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-analytics.js"></script>
 		<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
 		<script src="./assets/javascript/app.js"></script>
 	</head>
 	<body>
@@ -22,7 +23,7 @@
 			<h1 class="ui header">Rock-Paper-Scissors Multiplayer</h1>
 
 			<div>
-                <h3>Score</h3>
+				<h3>Score</h3>
 				<a class="ui blue label">
 					<span id="myUserName">Anonymous</span>
 					<div id="myScore" class="detail">0</div>
@@ -34,7 +35,7 @@
 			</div>
 
 			<div class="ui segment">
-				<p>Waiting on remote player...</p>
+				<p id="gameReport">Waiting on remote player...</p>
 			</div>
 
 			<div>
@@ -58,6 +59,16 @@
 					Way to go!
 				</p>
 			</div>
+		</div>
+
+		<div class="ui padded segment tiny modal">
+			<div class="ui form">
+					<div class="field">
+						<label>Enter Your Name</label>
+						<input placeholder="Name" type="text" id="userName"/>
+					</div>
+				<div class="ui submit button">Submit</div>
+            </div>
 		</div>
 
 		<script>
