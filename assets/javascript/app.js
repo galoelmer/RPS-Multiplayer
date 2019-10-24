@@ -54,4 +54,10 @@ $(function () {
 
     });
 
+    $("[data-choice]").on("click", function () {
+
+        console.log($(this).attr("data-choice"));
+
+    });
+
 });
