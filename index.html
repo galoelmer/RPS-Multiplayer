@@ -7,8 +7,51 @@
 		<title>Rock-Paper-Scissors Multiplayer</title>
 		<link rel="stylesheet" href="assets/css/reset.css" />
 		<link rel="stylesheet" href="./assets/css/style.css" />
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"
+		/>
 		<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 		<script src="./assets/javascript/app.js"></script>
 	</head>
-	<body></body>
+	<body>
+		<div class="ui center aligned container">
+			<h1 class="ui header">Rock-Paper-Scissors Multiplayer</h1>
+
+			<a class="ui blue image label">
+				<span>Veronica</span>
+				<div class="detail">
+					<span>Win: 23</span>
+					<span>Lose: 15</span>
+				</div>
+			</a>
+			<a class="ui teal image label">
+				<span>Anonymous</span>
+				<div class="detail">
+					<span>Win: 15</span>
+					<span>Lose: 23</span>
+				</div>
+			</a>
+
+			<div class="ui segment">
+				<p>Waiting on remote player...</p>
+			</div>
+
+			<div>
+				<i class="massive hand paper outline icon"></i>
+				<i class="massive hand rock outline icon"></i>
+				<i class="massive hand scissors outline icon"></i>
+			</div>
+
+			<div class="ui input focus">
+				<input type="text" placeholder="Say hello" />
+				<div class="ui violet icon button">
+					Send
+				</div>
+			</div>
+			<div class="ui floating message">
+				<p><span>Veronica: </span> Way to go!</p>
+			</div>
+		</div>
+	</body>
 </html>
