@@ -49,20 +49,15 @@ $(function () {
 
             // If myUserID is different to user.key(id) then
             // the second player is log
-            if (user.key != myUserId) {
-
-                //console.log("Other player connected!");
+            if (user.key != myUserId && remoteUserId == "") {
 
                 //Gets second player Id from database
                 remoteUserId = user.key;
 
                 //Gets second player database reference
                 remoteUserRef = onlineUsersRef.child(remoteUserId);
-
             }
-
         });
-
     });
 
     // Add click event to ROCK, PAPER, SCISSORS' icons and
@@ -71,9 +66,7 @@ $(function () {
     $("[data-choice]").on("click", function () {
 
         myUserRef.update({
-
             choice: $(this).attr("data-choice")
-
         });
 
     });
@@ -93,27 +86,20 @@ $(function () {
             if (remotePlayerChoice) {
 
                 checkWinner(myChoice, remotePlayerChoice);
-
             }
-
         }
-
     });
 
 
-    // Update UI scores and players' name
+    // Update UI scores and players' names
     onlineUsersRef.on("value", function (snapshot) {
 
         if (remoteUserId) {
 
             $("#myScore").text(snapshot.child(myUserId).val().score);
-
             $("#remoteUserScore").text(snapshot.child(remoteUserId).val().score);
-
             $("#remoteUserName").text(snapshot.child(remoteUserId).val().name);
-
             $("#gameReport").text(snapshot.child(remoteUserId).val().name + " is online");
-
         }
 
         $("#myUserName").text(snapshot.child(myUserId).val().name);
@@ -150,7 +136,7 @@ $(function () {
         }
     }
 
-    // Function resets data from users
+    // Function updates score database value and clears players choices
     function scoreDatabaseUpdate() {
 
         myUserRef.update({
@@ -166,30 +152,32 @@ $(function () {
 
     // After remote player disconnects, reset remote user id and clear
     // my user database data
-    onlineUsersRef.on("child_removed", function () {
+    onlineUsersRef.on("child_removed", function (snapshot) {
 
-        remoteUserId = "";
-
-        myUserRef.update({
-            score: 0
-        });
-
+        // Reset only when remote user disconnects and not when
+        // other users disconnect
+        if (snapshot.key == remoteUserId) {
+            score = 0;
+            remoteUserId = "";
+            myUserRef.update({
+                score: 0
+            });
+        }
     });
-
 
     // Modal shows input-name form before game starts
     $('.tiny.modal').modal('show');
-
 
     var userName = "Anonymous";
 
     $(".ui.submit.button").click(function () {
 
-        userName = $("#userName").val();
+        userName = $("#userName").val() || "Anonymous";
+
         // Update player's name in the database
         myUserRef.update({
 
-            name: userName || "Anonymous"
+            name: userName
 
         });
 
@@ -197,30 +185,31 @@ $(function () {
 
     });
 
-
-
+    //Create reference to database chats
     var chatRef = database.ref("/chats");
 
+    // Event triggers on every new message added to database
     chatRef.on("child_added", function (snapshot) {
 
+        // Create paragraph element with message text from database
+        // and append to HTML tag
         var p = $("<p>").text(snapshot.val().name + ": " + snapshot.val().message);
-
         $("#chatMessages").prepend(p);
-
+        chatRef.remove();
     });
 
 
+    // Add event listener to chat send button 
     $("#chatSendButton").on("click", function () {
 
+        // Push new message to chats database
         var message = $("#userMessage").val();
-
         chatRef.push({
             message: message,
             name: userName
         });
 
         $("#userMessage").val("");
-
     });
 
 });
