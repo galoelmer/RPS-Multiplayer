@@ -67,6 +67,10 @@ $(function () {
     // the data attribute value stored in each icon tag
     $("[data-choice]").on("click", function () {
 
+        $(this).addClass("selected-icon-color");
+        $(this).siblings().removeClass("selected-icon-color");
+        $(this).siblings().addClass("icon-color");
+
         myUserRef.update({
             choice: $(this).attr("data-choice")
         });
@@ -90,7 +94,7 @@ $(function () {
             }
         }
     });
-    
+
     // Update UI scores and players' names
     onlineUsersRef.on("value", function (snapshot) {
 
@@ -145,6 +149,7 @@ $(function () {
         remoteUserRef.update({
             choice: ""
         });
+        $(".hand.icon").removeClass("selected-icon-color");
     }
 
     // After remote player disconnects, reset remote user id and clear
