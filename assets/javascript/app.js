@@ -39,6 +39,8 @@ $(function () {
         }
     });
 
+    var remoteUserName = "Anonymous";
+
     // Set a maximum number of players to two. Other user are able to connect, but
     // they are no able to play. Only the first two user connections are allow to play.
     onlineUsersRef.limitToFirst(2).on("value", function (snapshot) {
@@ -50,7 +52,7 @@ $(function () {
             // If myUserID is different to user.key(id) then
             // the second player is log
             if (user.key != myUserId && remoteUserId == "") {
-
+                showStatusMessage("online", user.val().name);
                 //Gets second player Id from database
                 remoteUserId = user.key;
 
@@ -68,7 +70,6 @@ $(function () {
         myUserRef.update({
             choice: $(this).attr("data-choice")
         });
-
     });
 
     // Event listens to any changes in onlineUsersList
@@ -79,18 +80,17 @@ $(function () {
 
         // Check if remote user id exist and checks if both players have made their choice, if all true then a function to check who wins is call
         if (remoteUserId && myChoice) {
+            showStatusMessage("choice", snapshot.child(remoteUserId).val().name, myChoice);
 
             // Store remote player choice (rock, paper, scissor)
             var remotePlayerChoice = snapshot.child(remoteUserId).val().choice;
 
             if (remotePlayerChoice) {
-
-                checkWinner(myChoice, remotePlayerChoice);
+                checkWinner(myChoice, remotePlayerChoice, snapshot.child(remoteUserId).val().name);
             }
         }
     });
-
-
+    
     // Update UI scores and players' names
     onlineUsersRef.on("value", function (snapshot) {
 
@@ -99,55 +99,52 @@ $(function () {
             $("#myScore").text(snapshot.child(myUserId).val().score);
             $("#remoteUserScore").text(snapshot.child(remoteUserId).val().score);
             $("#remoteUserName").text(snapshot.child(remoteUserId).val().name);
-            $("#gameReport").text(snapshot.child(remoteUserId).val().name + " is online");
+            remoteUserName = snapshot.child(remoteUserId).val().name;
         }
 
         $("#myUserName").text(snapshot.child(myUserId).val().name);
-
     });
 
     var score = 0;
 
     // Functions compares players choice between rock, paper, scissors and
     // choose the the winner hand
-    function checkWinner(myChoice, remotePlayerChoice) {
+    function checkWinner(myChoice, remotePlayerChoice, remotePlayerName) {
 
         if (myChoice == remotePlayerChoice) {
-            console.log("It's a TIE");
+            showStatusMessage("tie", remotePlayerName, myChoice, "");
             scoreDatabaseUpdate();
         }
         else if (myChoice == "rock" && remotePlayerChoice == "scissors") {
-            console.log("You Win ROCK");
+            showStatusMessage("win", remotePlayerName, myChoice, remotePlayerChoice);
             score++;
             scoreDatabaseUpdate();
         }
         else if (myChoice == "paper" && remotePlayerChoice == "rock") {
             console.log("You win PAPER");
+            showStatusMessage("win", remotePlayerName, myChoice, remotePlayerChoice);
             score++;
             scoreDatabaseUpdate();
         }
         else if (myChoice == "scissors" && remotePlayerChoice == "paper") {
-            console.log("You Win SCISSORS");
+            showStatusMessage("win", remotePlayerName, myChoice, remotePlayerChoice);
             score++;
             scoreDatabaseUpdate();
         } else {
-            console.log("You Lose");
+            showStatusMessage("lose", remotePlayerName, myChoice, remotePlayerChoice);
             scoreDatabaseUpdate();
         }
     }
 
     // Function updates score database value and clears players choices
     function scoreDatabaseUpdate() {
-
         myUserRef.update({
             score: score,
             choice: ""
         });
-
         remoteUserRef.update({
             choice: ""
         });
-
     }
 
     // After remote player disconnects, reset remote user id and clear
@@ -157,6 +154,7 @@ $(function () {
         // Reset only when remote user disconnects and not when
         // other users disconnect
         if (snapshot.key == remoteUserId) {
+            showStatusMessage("offline", remoteUserName);
             score = 0;
             remoteUserId = "";
             myUserRef.update({
@@ -176,13 +174,10 @@ $(function () {
 
         // Update player's name in the database
         myUserRef.update({
-
             name: userName
-
         });
 
         $('.tiny.modal').modal('hide');
-
     });
 
     //Create reference to database chats
@@ -198,7 +193,6 @@ $(function () {
         chatRef.remove();
     });
 
-
     // Add event listener to chat send button 
     $("#chatSendButton").on("click", function () {
 
@@ -212,4 +206,33 @@ $(function () {
         $("#userMessage").val("");
     });
 
+    function showStatusMessage(keyword, remotePlayerName, hand, remotePlayerChoice){
+
+        switch (keyword) {
+            case "offline":
+                $("#gameReport").empty();
+                $("#gameReport").append("<p>" + remotePlayerName + " left the game</p><p>Waiting on other player...</p>");
+                break;
+            case "online":
+                $("#gameReport").empty();
+                $("#gameReport").append("<p>You playing against "+ remotePlayerName +"</p><p>Pick a hand to start playing</p>");
+                break;
+            case "choice":
+                $("#gameReport").empty();
+                $("#gameReport").append("<p>You chose " + hand +"</p><p>Waiting on " + remotePlayerName + " to make a choice...</p>");
+                break;
+            case "win":
+                $("#gameReport").empty();
+                $("#gameReport").append("<p>Your " + hand +" beats " + remotePlayerName +"'s " + remotePlayerChoice +"</p><p>Play Again</p>");
+                break;
+            case "lose":
+                $("#gameReport").empty();
+                $("#gameReport").append("<p>Your " + hand + " loses against " + remotePlayerName + "'s " + remotePlayerChoice + "</p><p>Play Again</p>");
+                break;
+            case "tie":
+                $("#gameReport").empty();
+                $("#gameReport").append("<p>It's a Tie, you both chose the same hand</p><p>Play Again</p>");
+                break;
+        }
+    }
 });
