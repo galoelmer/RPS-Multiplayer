@@ -51,7 +51,7 @@ $(function () {
 
             // If myUserID is different to user.key(id) then
             // the second player is log
-            if (user.key != myUserId && remoteUserId == "") {
+            if (user.key != myUserId && remoteUserId == "" && user.val().name != undefined) {
                 showStatusMessage("online", user.val().name);
                 //Gets second player Id from database
                 remoteUserId = user.key;
@@ -191,6 +191,7 @@ $(function () {
             $(".container").remove();
             // Modal shows message to users when they are not able to play the game
             $('.basic.modal').modal('show');
+            myUserRef.remove();
         }
     });
 
@@ -229,7 +230,7 @@ $(function () {
                 break;
             case "online":
                 $("#gameReport").empty();
-                $("#gameReport").append("<p>You playing against " + remotePlayerName + "</p><p>Pick a hand to start playing</p>");
+                $("#gameReport").append("<p>You're playing against " + remotePlayerName + "</p><p>Pick a hand to start playing</p>");
                 break;
             case "choice":
                 $("#gameReport").empty();
