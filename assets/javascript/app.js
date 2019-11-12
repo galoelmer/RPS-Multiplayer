@@ -168,21 +168,30 @@ $(function () {
         }
     });
 
-    // Modal shows input-name form before game starts
-    $('.tiny.modal').modal('show');
-
     var userName = "Anonymous";
+    // Prevent more than two online users play the game
+    onlineUsersRef.once("value", function (snapshot) {
+        if (snapshot.numChildren() < 3) {
 
-    $(".ui.submit.button").click(function () {
+            // Modal shows input-name form before game starts
+            $('.tiny.modal').modal('show');
 
-        userName = $("#userName").val() || "Anonymous";
+            $(".ui.submit.button").click(function () {
 
-        // Update player's name in the database
-        myUserRef.update({
-            name: userName
-        });
+                userName = $("#userName").val() || "Anonymous";
 
-        $('.tiny.modal').modal('hide');
+                // Update player's name in the database
+                myUserRef.update({
+                    name: userName
+                });
+                $('.tiny.modal').modal('hide');
+            });
+
+        } else {
+            $(".container").remove();
+            // Modal shows message to users when they are not able to play the game
+            $('.basic.modal').modal('show');
+        }
     });
 
     //Create reference to database chats
@@ -211,7 +220,7 @@ $(function () {
         $("#userMessage").val("");
     });
 
-    function showStatusMessage(keyword, remotePlayerName, hand, remotePlayerChoice){
+    function showStatusMessage(keyword, remotePlayerName, hand, remotePlayerChoice) {
 
         switch (keyword) {
             case "offline":
@@ -220,15 +229,15 @@ $(function () {
                 break;
             case "online":
                 $("#gameReport").empty();
-                $("#gameReport").append("<p>You playing against "+ remotePlayerName +"</p><p>Pick a hand to start playing</p>");
+                $("#gameReport").append("<p>You playing against " + remotePlayerName + "</p><p>Pick a hand to start playing</p>");
                 break;
             case "choice":
                 $("#gameReport").empty();
-                $("#gameReport").append("<p>You chose " + hand +"</p><p>Waiting on " + remotePlayerName + " to make a choice...</p>");
+                $("#gameReport").append("<p>You chose " + hand + "</p><p>Waiting on " + remotePlayerName + " to make a choice...</p>");
                 break;
             case "win":
                 $("#gameReport").empty();
-                $("#gameReport").append("<p>Your " + hand +" beats " + remotePlayerName +"'s " + remotePlayerChoice +"</p><p>Play Again</p>");
+                $("#gameReport").append("<p>Your " + hand + " beats " + remotePlayerName + "'s " + remotePlayerChoice + "</p><p>Play Again</p>");
                 break;
             case "lose":
                 $("#gameReport").empty();
